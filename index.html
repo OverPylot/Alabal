@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="hu">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#111f1c">
+  <meta name="description" content="Egy vacsora. Öt esély. Mobilos, kockadobós etikettpróba egy D&D-banketthez.">
+  <title>A gróf asztalánál</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./game.js"></script>
+</head>
+<body>
+  <div class="wallpaper" aria-hidden="true"></div>
+  <header class="masthead">
+    <a class="brand" href="./" aria-label="A gróf asztalánál, kezdőlap"><span aria-hidden="true">❧</span> FEKETERÓZSA BIRTOK</a>
+    <button class="icon-button" type="button" data-action="rules" aria-label="Játékszabályok">?</button>
+  </header>
+  <main id="app" tabindex="-1"></main>
+  <footer class="page-footer">Egy D&D-vacsora, ahol az illem a tét.</footer>
+  <dialog id="modal" aria-labelledby="modal-title"><div id="modal-content"></div></dialog>
+  <div id="announcement" class="sr-only" role="status" aria-live="polite"></div>
+  <noscript>A játékhoz engedélyezned kell a JavaScriptet a böngésződben.</noscript>
+</body>
+</html>
