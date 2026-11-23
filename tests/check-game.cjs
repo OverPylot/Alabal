@@ -8,7 +8,7 @@ const source = fs.readFileSync(path.join(__dirname, '..', 'game.js'), 'utf8');
 new vm.Script(source);
 const instrumented = source.replace(/  intro\(\);\n\}\)\(\);\s*$/, `
   globalThis.game = { validRoll, hintTier, delta, freshGame, load, setRoll, select, eat, next,
-    start, setRisk, courses, render, rules, ending,
+    start, setRisk, courses, render, rules, ending, utensil, publicGameURL, makeInvitation,
     get state() { return state; }, set state(value) { state = value; }, get saved() { return saved; } };
 })();`);
 assert.notEqual(source, instrumented, 'The test entry point must be installed.');
@@ -17,7 +17,7 @@ function harness({ storageThrows = false, initialSaved = null } = {}) {
   const elements = new Map();
   const listeners = new Map();
   const storage = new Map();
-  if (initialSaved) storage.set('grofi-vacsora.v1', JSON.stringify(initialSaved));
+  if (initialSaved) storage.set('grofi-vacsora.v2', JSON.stringify(initialSaved));
   function element(id) {
     if (!elements.has(id)) elements.set(id, {
       innerHTML: '', textContent: '', open: false, disabled: false, isConnected: true,
@@ -34,6 +34,7 @@ function harness({ storageThrows = false, initialSaved = null } = {}) {
       getItem(key) { if (storageThrows) throw new Error('Storage disabled'); return storage.get(key) ?? null; },
       setItem(key, value) { if (storageThrows) throw new Error('Storage disabled'); storage.set(key, value); }
     },
+    URL: require('node:url').URL, qrcode: require('../vendor/qrcode.js'),
     window: { scrollTo() {} }, console
   });
   vm.runInContext(instrumented, context);
@@ -95,24 +96,24 @@ check('Better excuse results unlock more detailed help', () => {
   const { game } = harness(); game.start(); game.setRoll('3'); game.setRoll('19', true);
   assert.equal(game.state.roll, 19); assert.equal(game.hintTier(game.state.roll), 2);
 });
-check('An entire game finishes at 10 points, without a sixth course', () => {
+check('An entire ten-course game finishes at 20 points, without an eleventh course', () => {
   const { game } = harness(); game.start();
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     assert.equal(game.state.index, i); game.setRoll('12'); game.setRisk(true);
     game.select(game.courses[i].correct); game.eat();
     assert.ok(game.load(), 'A completed course must have a valid saved state'); game.next();
   }
-  assert.equal(game.state.stage, 'end'); assert.equal(game.state.score, 10);
-  assert.equal(game.state.history.length, 5); assert.ok(game.load());
-  game.next(); assert.equal(game.state.score, 10);
+  assert.equal(game.state.stage, 'end'); assert.equal(game.state.score, 20);
+  assert.equal(game.state.history.length, 10); assert.ok(game.load());
+  game.next(); assert.equal(game.state.score, 20);
 });
-check('All wrong risky choices finish at minus five, not clamped to zero', () => {
+check('All wrong risky choices finish at minus ten, not clamped to zero', () => {
   const { game } = harness(); game.start();
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 10; i++) {
     game.setRoll('20'); game.setRisk(true);
     game.select(game.courses[i].options.find(o => o.id !== game.courses[i].correct).id); game.eat(); game.next();
   }
-  assert.equal(game.state.score, -5); assert.equal(game.state.stage, 'end'); assert.ok(game.load());
+  assert.equal(game.state.score, -10); assert.equal(game.state.stage, 'end'); assert.ok(game.load());
 });
 check('Reloading preserves the roll, selection, risk, and randomized order', () => {
   const { game } = harness(); game.start(); game.setRoll('13'); game.setRisk(true);
@@ -124,14 +125,14 @@ check('Reloading preserves the roll, selection, risk, and randomized order', () 
 });
 check('Corrupt or incompatible saved games are safely rejected', () => {
   const { game, storage } = harness();
-  storage.set('grofi-vacsora.v1', 'broken JSON'); assert.equal(game.load(), null);
+  storage.set('grofi-vacsora.v2', 'broken JSON'); assert.equal(game.load(), null);
   const cases = [
     s => { s.index = 42; }, s => { s.order[0] = ['soupspoon', 'soupspoon', 'soupspoon']; },
     s => { s.score = 300; }, s => { s.stage = 'choose'; s.roll = null; },
     s => { s.version = 999; }, s => { s.history = [{}]; }
   ];
   for (const mutate of cases) {
-    const s = game.freshGame(); mutate(s); storage.set('grofi-vacsora.v1', JSON.stringify(s));
+    const s = game.freshGame(); mutate(s); storage.set('grofi-vacsora.v2', JSON.stringify(s));
     assert.equal(game.load(), null);
   }
 });
@@ -147,5 +148,49 @@ check('Surrender ends only this game and preserves the existing score', () => {
 check('The game remains playable when browser storage is unavailable', () => {
   const { game } = harness({ storageThrows: true }); game.start(); game.setRoll('10');
   game.select(game.courses[0].correct); game.eat(); assert.equal(game.state.score, 1);
+});
+check('There are exactly ten complete playable courses', () => {
+  const { game } = harness(); assert.equal(game.courses.length, 10);
+  game.courses.forEach(c => {
+    assert.equal(c.hints.length, 3); assert.equal(c.options.length, 3);
+    assert.ok(c.success && c.failure && c.explanation);
+    assert.ok(c.options.some(o => o.id === c.correct));
+    for (const option of c.options) assert.ok(!game.utensil(option.id).includes('undefined'));
+  });
+});
+check('Every fork is a single closed continuous silhouette', () => {
+  const { game } = harness();
+  for (const id of ['dinnerfork', 'dessertfork', 'fishfork', 'servingfork', 'cheesefork']) {
+    const svg = game.utensil(id);
+    const shape = svg.match(/class="fork-silhouette" d="([^"]+)"/);
+    assert.ok(shape, id); assert.equal((shape[1].match(/M/g) || []).length, 1);
+    assert.ok(shape[1].endsWith('Z')); assert.ok(!svg.includes('NaN'));
+  }
+});
+check('The countess is trusting at six points and uncertain below six', () => {
+  const { game, elements } = harness(); game.start();
+  game.state.stage = 'end'; game.state.score = 6; game.ending();
+  assert.ok(elements.get('#app').innerHTML.includes('Jó kezekben.'));
+  assert.ok(elements.get('#app').innerHTML.includes('biztonságban érzi magát veletek'));
+  assert.ok(elements.get('#app').innerHTML.includes('bizalom.webp'));
+  game.state.score = 5; game.ending();
+  assert.ok(elements.get('#app').innerHTML.includes('Hát… nem is tudom.'));
+  assert.ok(elements.get('#app').innerHTML.includes('ketely.webp'));
+});
+check('The invitation never publishes a localhost or script URL', () => {
+  const { game } = harness();
+  assert.equal(game.publicGameURL('http://127.0.0.1:8765/'), null);
+  assert.equal(game.publicGameURL('http://localhost:8765/'), null);
+  assert.equal(game.publicGameURL('javascript:alert(1)'), null);
+  assert.equal(game.publicGameURL('not a URL'), null);
+  assert.equal(game.publicGameURL('https://example.com/game/?debug=1#state'), 'https://example.com/game/');
+});
+check('Invitation QR codes are generated locally with a quiet zone', () => {
+  const { game, elements } = harness();
+  game.makeInvitation('https://example.com/game/');
+  const output = elements.get('#qr-output').innerHTML;
+  assert.ok(output.includes('<svg')); assert.ok(output.includes('fill="#fff"'));
+  assert.ok(output.includes('https://example.com/game/'));
+  assert.equal(elements.get('#qr-error').textContent, '');
 });
 console.log(`\n${checks} checks passed.`);

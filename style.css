@@ -5,3 +5,16 @@
 .course-heading .description,.answer-box p{font-size:1rem}.section-label{font-size:.9rem}.risk-button{font-size:1rem}.risk-button span{font-size:.875rem}.helpers button,.quit-button{font-size:.9rem}.subcopy{font-size:.9rem}.round-list li{font-size:.9rem}dialog p,dialog li{font-size:1rem}
 
 .icon-button{width:44px;height:44px}@media(max-width:390px){.utensil-card{min-height:200px}.utensil-card .utensil{height:160px}}
+
+/* Local illustrations and invitation: no external service is contacted. */
+html{scrollbar-gutter:stable}
+.reaction-art{margin:0 0 23px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#15251d}
+.reaction-art img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover}
+.result .progress{margin-bottom:22px}.result h1{font-size:2.15rem}
+.ending .reaction-art{margin-top:20px}.ending-copy{text-align:left;line-height:1.8}
+.share-link{margin:12px auto 0;font-size:.9rem}.intro .fantasy-note{margin-top:15px}
+.share-url{width:100%;padding:13px;margin:8px 0;border:1px solid var(--line);border-radius:5px;background:var(--bg);color:var(--ink);font-size:1rem}
+.qr-code{padding:0;background:white;max-width:280px;margin:24px auto 12px;border-radius:5px;overflow:hidden}
+.qr-code svg{display:block;width:100%;height:auto}.qr-address{font-size:.85rem;text-align:center;overflow-wrap:anywhere;color:var(--gold)}
+.progress{gap:4px}.utensil-card .utensil{overflow:visible;flex:none}.brand{letter-spacing:.15em}
+@media(max-width:390px){.intro-meta{gap:13px}.intro-meta span+span{padding-left:13px}.reaction-art{margin-bottom:19px}.result h1{font-size:1.9rem}}

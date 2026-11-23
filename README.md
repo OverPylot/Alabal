@@ -1,53 +1,45 @@
-# A gróf asztalánál
+# A grófnő asztalánál
 
-Magyar nyelvű, mobilbarát, kockadobós evőeszköz-minijáték egy D&D-banketthez. Öt fogás, néhány szokatlan családi szokás, és egy vállalhatatlanul kényelmes kijárat az etikettből.
+Magyar, mobilbarát, kockadobós D&D-etikettjáték **Helena Valcourt grófnő** vacsoráján, tíz fogással és vegyes nemesi társasággal. A gróf nem szerepel élő vendégként; a levesbe eső monokli az egyik arisztokratáé.
 
-## Indítás
+## GitHub Pages
 
-Nyisd meg az `index.html` fájlt egy modern böngészőben, vagy töltsd fel a fájlokat GitHub Pages-re. Nincs csomagtelepítés, fordítás, API-kulcs, adatbázis vagy saját háttérszerver. A képek SVG-ként a kódban vannak; külső betűtípus és külső szolgáltatás sincs.
+A ZIP-et csomagold ki, és a teljes tartalmát töltsd a repó gyökerébe. Az `assets/` és a `vendor/` mappát is tartsd meg: ezekben vannak a reakcióképek és a helyben futó QR-generátor. Az `index.html` közvetlenül a gyökérbe kerüljön.
 
-## GitHub Pages, új repóval
+A mellékelt `.github/workflows/static.yml` GitHub Actions segítségével publikál. A repóban **Settings → Pages → Source: GitHub Actions**, majd a `main` ágra történő feltöltés indítja a közzétételt. Más alapág esetén a workflow `branches` sorát írd át az ág nevére.
 
-1. Hozz létre egy új GitHub-repót, például `grofi-vacsora` néven. Ingyenes GitHub-fióknál válassz nyilvános repót a Pages használatához.
-2. Töltsd fel ennek a mappának a **tartalmát** a repó gyökerébe. Az `index.html` közvetlenül a gyökérbe kerüljön. A `tests/` mappa és ez az útmutató opcionális a futtatáshoz.
-3. A repóban: **Settings → Pages → Build and deployment → Source: Deploy from a branch**.
-4. Válaszd ki a `main` ágat és a `/(root)` mappát, majd **Save**.
-5. A közzététel után a Pages beállításai között megjelenő linket küldd el a játékosoknak.
+Ha már működik a korábbi statikus workflow, nem kell külön másik workflow-t hozzáadnod. A játék fájljait és az új mappákat frissítsd a meglévő repóban.
 
-A helyes publikálási beállítások hivatalos leírása: [GitHub Pages dokumentáció](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
-
-A hivatkozások relatívak, ezért a játék felhasználói és projektoldalként, illetve repón belüli almappából is működik. A `.nojekyll` fájl a közvetlen statikus kiszolgáláshoz tartozik.
+[GitHub Pages hivatalos dokumentáció](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)
 
 ## Játékmenet
 
-1. A játékos fizikailag dob egy d20-szal, és beírja az eredményt. A „Dobok itt” lehetőség beépített dobást ad.
-2. Az eredmény az utalás részletességét határozza meg: **1–9** kevés segítség; **10–15** részletesebb segítség; **16–20** pontos leírás. A dobás önmagában nem ér pontot.
-3. Tétet választ: **óvatosan** helyes megoldásért +1 pont, hibáért 0; **kockáztatva** helyes megoldásért +2, hibáért −1 pont.
-4. Kiválasztja az egyik evőeszközt, majd megerősíti. Az eszközök sorrendje új játékonként változik, de folytatáskor megmarad.
-5. A játék elmondja a helyes választ és jóváírja a pontot. Nincs második dobás a válasz után.
+1. Dobj egy d20-szal, és írd be, vagy használd a „Dobok itt” gombot.
+2. A dobás az utalást javítja: **1–9** kevés segítség, **10–15** részletesebb, **16–20** pontos leírás.
+3. Válassz tétet: **óvatosan** jó válasz +1, rossz 0 pont; **kockáztatva** jó +2, rossz −1 pont.
+4. Válassz egy evőeszközt, majd erősítsd meg. A válasz után vicces szöveg és egy társasági reakciókép jelenik meg. Nincs újabb kockadobás.
 
-**Öt fogásból legalább 3 összpont** jelenti a sikeres vacsorapróbát. Az elérhető tartomány −5 és 10 pont között van.
+**Tíz fogás, összesen −10 és +20 pont között. Legalább 6 ponttól Helena láthatóan biztonságban érzi magát veletek: amit rátok bízna, jó kezekben lesz.** Ennél kevesebb pontnál udvarias, de kétkedő „Hát… nem is tudom” befejezés jár.
 
-- **Kimagyarázom!** Egyszer használható az egész vacsora alatt, a választás lezárása előtt. Új dobást ad a segítséghez. Az eredeti és az új dobás közül a jobb marad meg; érvénytelen bevitel vagy a felugró ablak bezárása nem használja el. Ez nem egy elrontott válasz utólagos javítása.
-- **„Lássák csak, milyen parasztgyerek vagyok!”** Megerősítés után azonnal lezárja az adott játékos minijátékát. A már megszerzett pontjai megmaradnak; a befejezés szerint innentől mindent kézzel eszik.
-- **Nincs lesés.** A végleges szabályoknak megfelelően ezt a segítséget nem tartalmazza a játék.
+- **Kimagyarázom!** Egyszer az egész vacsora alatt, a válasz lezárása előtt újradobhatsz jobb utalásért. A jobb dobás marad. Érvénytelen bevitel és a modal bezárása nem használja el.
+- **Parasztgyerek-gomb:** megerősítés után neked véget ér a minijáték; ezután mindent kézzel eszel. Az addigi pontok megmaradnak.
+- Lesés nincs.
 
-## A mesélőnek
+A szabályok viktoriánus hangulatú fantáziát szolgálnak, nem történelmi vizsgát. A Valcourt-házi szokásokat a játék külön kiírja. A rózsás kanál Helena személyes sörbetszokása, nem családnév vagy családi címer.
 
-A játék viktoriánus hangulatú fantázia, nem történelmi etikettvizsga. Az első három fogás az evőeszközök felismerésére épül; az utolsó kettő a Feketerózsa család kitalált szokásait követi. Ezeket a játék külön jelzi.
+## Meghívó és QR-kód
 
-Minden játékos a saját telefonján játszik. Nincs közös szoba, hálózati szinkron vagy mesélői adminfelület. A végén a játékos megmutatja a pontszámát a mesélőnek. Szükség esetén a mesélő szóban jelzi, mikor léphetnek tovább a következő fogásra.
+A kezdőlapon és a befejezésnél található a **„Meghívó a többieknek · QR-kód”** gomb. Az éles oldalon automatikusan az oldal saját címére készít QR-kódot. A link módosítható, a QR pedig SVG-ként letölthető és nyomtatható. A generálás helyben történik, külső QR-szolgáltatás nélkül.
 
-A haladás `localStorage`-ban marad meg. A kezdőlapon a „Folytatom a vacsorát” gombbal folytatható. Böngészőadat-törlés vagy másik készülék esetén a mentés nem költözik át. Ha a böngésző letiltja a helyi tárolást, az adott megnyitás alatt továbbra is végigjátszható a játék.
+Helyi előnézetben a játék nem kódolja be automatikusan a localhost-címet, mert az a játékosok telefonján nem működne. Ilyenkor az éles GitHub Pages-linket kell megadni. A QR csak a játék címét tartalmazza, a pontszámot és a mentést nem.
 
-## Szerkesztés és ellenőrzés
+## Technika és mentés
 
-- `index.html`: az oldal váza.
-- `style.css`: reszponzív megjelenés; külső betűtípus nélkül.
-- `game.js`: fogások, szövegek, utalások, rajzok, szabályok és helyi mentés.
-- `favicon.svg`: az oldal ikonja.
-- `tests/check-game.cjs`: függőség nélküli logikai és mentési ellenőrzések.
+Nincs külön háttérszerver, adatbázis, fiók, API-kulcs vagy futás közbeni fizetős képgenerálás. A négy reakciókép előre elkészült, a repóból töltődik. A képek és a végleges promptok: `assets/KEPEK.md`. A QR-generátor MIT-licencű, licencét a `vendor/` tartalmazza.
 
-Fejlesztői előnézethez opcionálisan: `python3 -m http.server 8765`. Ez csak helyi ellenőrzés; a kész játék működéséhez nem kell saját szerver.
+Mindenki a saját telefonján játszik. Nincs közös szoba vagy szinkron; a mesélőnek a végső képernyőt kell megmutatni. A böngésző helyben ment, a vacsora a kezdőlapon folytatható. Ez a tízfogásos kiadás külön mentést használ, az ötfogásos régi menetet nem folytatja.
 
-Logikai ellenőrzés Node.js-szel: `node tests/check-game.cjs`.
+## Ellenőrzés
+
+- Logika: `node tests/check-game.cjs` — húsz ellenőrzés, teljes tízfogásos menet, pontozás, mentés, egyszeri segítség, új befejezések, egybefüggő villák és QR-generálás.
+- Opcionális helyi előnézet: `python3 -m http.server 8765`. Ez csak fejlesztéshez kell, a GitHub Pages-en nincs szükség saját szerverre.
